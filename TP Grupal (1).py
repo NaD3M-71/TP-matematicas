@@ -120,55 +120,65 @@ print("\nConjuntos generados:")
 for letra, conjunto in conjuntos_dni.items():#recorro por cada Key y el valor de los conjuntos
     print(f"{letra}: {conjunto}") #Imprimo Key y el valor de los conjuntos
 
+menu=True
+while menu:
+    print ('\nMenú\n' '1. Union de conjuntos\n' '2. Interseccion de conjuntos\n' '3. Diferencia de conjuntos\n' '4. Diferencia simetrica de conjuntos\n' '5.Salir') 
 # Calculo la unión total de todos los conjuntos
-union_total = set() #creo un conjunto vacio donde se guardara los digitos sin repetir
-for conjunto in conjuntos_dni.values(): #recorremos cada conjunto dentrode el diccionario conjuntos_dni
-    union_total = union_total.union(conjunto) #en cada pasada agregamos los elementos actuales al conjunto union_total
+    opciones={1:'Union', 2:'Interseccion', 3:'Diferencia', 4:'Diferencia Simetrica', 5: 'Salir'}
+    opcion=int(input('\nIngrese la operación que desea realizar\n'))
+    if opcion in opciones:
+        if opcion ==1:
+            letras=list(conjuntos_dni.keys())
+            letra=input(f'Elija alguno de los conjuntos disponibles {letras}\n').upper()
+            conjunto_analizar=ordenar_lista(conjuntos_dni[letra])
+            print (conjunto_analizar)
+            
+            for i,conjunto_comparación in conjuntos_dni.items():
+                if i == letra:
+                    continue
 
-# Calculo la intersección total (elemento repitido en todos los grupos)
-listas_conjuntos = list(conjuntos_dni.values()) #Guardo todos los conjuntos en una lista para recorrerlas 1 a 1
-interseccion_total = listas_conjuntos[0] # Tomo el primer conjunto como punto inicial para calcular la intersección
-j = 1 # Empiezo desde el segundo conjunto (posición 1)
-while j < len(listas_conjuntos): # Mientras todavía me falten conjuntos por recorrer...
-    # Voy actualizando la intersección total con los elementos que están en común
-    interseccion_total = interseccion_total.intersection(listas_conjuntos[j])
-    j = j + 1 # Paso al siguiente conjunto
+                union=conjuntos_dni[letra].union(conjunto_comparación)     
+                print(f"Para '{letra}' ∪ '{i}' = {ordenar_lista(union)}")
+        elif opcion ==2:
+            letras=list(conjuntos_dni.keys())
+            letra=input(f'Elija alguno de los conjuntos disponibles {letras}\n').upper()
+            conjunto_analizar=ordenar_lista(conjuntos_dni[letra])
 
+            for i,conjunto_comparación in conjuntos_dni.items():
+                if i == letra:
+                    continue
 
-# Muestro las diferencias de cada grupo con respecto a los otros de a pares
-print("\nDiferencias entre pares de conjuntos:")
-letras = list(conjuntos_dni.keys())  # Obtengo todas las letras en una lista para poder hacer combinaciones
-for i in range(len(letras)):  # Recorro desde la primera letra
-    for j in range(i + 1, len(letras)):  # Recorro desde la siguiente letra para evitar repeticiones
-        letra1 = letras[i]  # Primera letra del par
-        letra2 = letras[j]  # Segunda letra del par
-        conjunto1 = conjuntos_dni[letra1]  # Primer conjunto
-        conjunto2 = conjuntos_dni[letra2]  # Segundo conjunto
-        
-        # Calculo diferencia del conjunto1 respecto al conjunto2
-        diferencia1 = conjunto1 - conjunto2
-        # Calculo diferencia del conjunto2 respecto al conjunto1
-        diferencia2 = conjunto2 - conjunto1
-        
-        # Muestro las diferencias entre este par
-        print(f"{letra1} - {letra2}: {diferencia1 if diferencia1 else 'Conjunto vacío'}")
-        print(f"{letra2} - {letra1}: {diferencia2 if diferencia2 else 'Conjunto vacío'}")
-        print()  # Línea en blanco para separar los pares
+                interseccion = conjuntos_dni[letra].intersection(conjunto_comparación)
+                print (f"Para '{letra}' ⋂ '{i}' = {ordenar_lista(interseccion)}")
 
-# Hago la diferencia simétrica (lo que no está en todos)
+        elif opcion ==3:
+            letras=list(conjuntos_dni.keys())
+            letra=input(f'Elija alguno de los conjuntos disponibles {letras}\n').upper()
+            conjunto_analizar=ordenar_lista(conjuntos_dni[letra])
 
-diferencia_simetrica = set()# Inicializo un conjunto vacío para ir acumulando
-for conjunto in conjuntos_dni.values():# Recorro todos los conjuntos del diccionario
-    union_temp = diferencia_simetrica.union(conjunto) # Guardo primero la unión de lo que ya tengo con el nuevo conjunto
-    interseccion_temp = diferencia_simetrica.intersection(conjunto)# calculo la intersección de lo que ya tengo con el nuevo conjunto
-    diferencia_simetrica = union_temp - interseccion_temp#saco la intersección de la unión para sacar la diferencia simétrica
+            for i,conjunto_comparación in conjuntos_dni.items():
+                if i == letra:
+                    continue
+                
+                diferencia = conjuntos_dni[letra].difference(conjunto_comparación) 
+                print (f"Para '{letra}' - '{i}' = {ordenar_lista(diferencia)}")
 
+        elif opcion ==4:
+            letras=list(conjuntos_dni.keys())
+            letra=input(f'Elija alguno de los conjuntos disponibles {letras}\n').upper()
+            conjunto_analizar=ordenar_lista(conjuntos_dni[letra])
 
-# Muestro los resultados de todas las operaciones
-print("\nOperaciones entre conjuntos:")
-print("Unión:", union_total)
-print("Intersección:", interseccion_total)
-print("Diferencia Simétrica:", diferencia_simetrica)
+            for i,conjunto_comparación in conjuntos_dni.items():
+                if i == letra: 
+                    continue
+
+                diferencia_simetrica = conjuntos_dni[letra].symmetric_difference(conjunto_comparación)
+                print (f"Para '{letra}' Δ '{i}' = {ordenar_lista(diferencia_simetrica)}")   
+        elif opcion ==5:
+            menu=False
+            
+    else:
+        print('\nIngrese una opción valida\n') 
 
 # Cuento cuántas veces aparece cada dígito en cada grupo (usando los DNIs completos)
 print("\nFrecuencia de dígitos (basada en DNIs completos):")  # Título para separar esta parte visualmente
@@ -197,7 +207,7 @@ for letra, conjunto in conjuntos_dni.items():  # Recorro cada grupo y su conjunt
 
 # Condiciones lógicas que se piden
 print("\nCondiciones lógicas:")  # Título para la parte de condiciones lógicas
-for digito in interseccion_total:  # Recorro los dígitos que están en todos los conjuntos
+for digito in interseccion:  # Recorro los dígitos que están en todos los conjuntos
     print(f"Dígito compartido: {digito}")  # Imprimo cuáles son los que se repiten en todos los grupos
     
 for letra, conjunto in conjuntos_dni.items():  # Recorro cada grupo
@@ -277,3 +287,6 @@ for par in producto_cart:  # Recorro cada par del producto cartesiano
     print(f"{par}")  # Muestro cada par (año, edad)
 
 print(f"\nTotal de pares en el producto cartesiano: {len(producto_cart)}")  # Muestro cuántos pares hay en total
+
+
+print("\nMuchas gracias!\n" "\nScaglioni Giuliano, Silva Gustavo Heber, Rossi Mariano, Roure Ricardo\n")
